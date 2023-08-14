@@ -14,6 +14,6 @@ interface ChecklistRepository {
 
   suspend fun deleteChecklist(uid: Int) : Int
 
-  suspend fun updateChecklist(data: ChecklistModel) : Int
+  suspend fun updateChecklist(uId: Int) : Int
 
 }

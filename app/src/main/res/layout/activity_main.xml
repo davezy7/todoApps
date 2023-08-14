@@ -38,21 +38,22 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:itemCount="10" />
+            tools:itemCount="5"
+            tools:listitem="@layout/item_task_list" />
 
         <include
             android:id="@+id/view_empty"
             layout="@layout/common_empty_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" />
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             app:indicatorColor="?colorSecondary"
             app:trackColor="?colorOnSecondary"
-            android:layout_gravity="center"
-            tools:progress="75"/>
+            tools:progress="75" />
 
     </ViewAnimator>
 

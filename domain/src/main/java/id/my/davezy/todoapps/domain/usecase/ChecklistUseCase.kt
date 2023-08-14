@@ -16,6 +16,6 @@ interface ChecklistUseCase {
 
   fun deleteChecklist(uid: Int) : Flow<DataState<Int>>
 
-  fun updateChecklist(data: ChecklistModel) : Flow<DataState<Int>>
+  fun updateChecklist(uId: Int) : Flow<DataState<Int>>
 
 }
