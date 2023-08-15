@@ -25,37 +25,45 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ViewAnimator
-        android:id="@+id/animator"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appbar">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_task_list"
+        <ViewAnimator
+            android:id="@+id/animator"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:itemCount="5"
-            tools:listitem="@layout/item_task_list" />
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appbar">
 
-        <include
-            android:id="@+id/view_empty"
-            layout="@layout/common_empty_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_task_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="5"
+                tools:listitem="@layout/item_task_list" />
 
-        <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            app:indicatorColor="?colorSecondary"
-            app:trackColor="?colorOnSecondary"
-            tools:progress="75" />
+            <include
+                android:id="@+id/view_empty"
+                layout="@layout/common_empty_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-    </ViewAnimator>
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:indicatorColor="?colorSecondary"
+                app:trackColor="?colorOnSecondary"
+                tools:progress="75" />
+
+        </ViewAnimator>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_add_task"

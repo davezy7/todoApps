@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
     setupAdapter()
     setupSubscribers()
     setupButtonListener()
+    setupRefreshListener()
     viewModel.getTasksList()
     binding.rvTaskList.adapter = taskListAdapter
   }
@@ -48,8 +49,8 @@ class MainActivity : AppCompatActivity() {
         is DataState.Loading -> showLoading()
         is DataState.Error -> state.error { showErrorMessage(it.message) }
         is DataState.Success -> state.success {
-          viewModel.getTasksList()
           showSuccessMessage("Task Added")
+          viewModel.getTasksList()
         }
       }
     }
@@ -58,8 +59,9 @@ class MainActivity : AppCompatActivity() {
         is DataState.Loading -> showLoading()
         is DataState.Error -> state.error { showErrorMessage(it.message) }
         is DataState.Success -> state.success {
-          viewModel.getTasksList()
           showSuccessMessage("Task removed")
+          viewModel.getTasksList()
+          taskListAdapter.notifyChanges(it)
         }
       }
     }
@@ -69,8 +71,18 @@ class MainActivity : AppCompatActivity() {
         is DataState.Error -> state.error { showErrorMessage(it.message) }
         is DataState.Success -> state.success {
           viewModel.getTasksList()
+          taskListAdapter.notifyChanges(it)
           showSuccessMessage("Success")
         }
+      }
+    }
+  }
+
+  private fun setupRefreshListener() {
+    binding.swipeRefresh.apply {
+      setOnRefreshListener {
+        viewModel.getTasksList()
+        isRefreshing = false
       }
     }
   }

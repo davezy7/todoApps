@@ -1,9 +1,11 @@
 package id.my.davezy.todoapps.dialogs
 
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isInvisible
 import id.my.davezy.todoapps.databinding.DialogTaskOptionBinding
 import id.my.davezy.todoapps.domain.models.ChecklistModel
 
@@ -35,9 +37,12 @@ class TaskOptionDialog(
         listener.onDeleteButtonClicked(task)
         dismiss()
       }
-      btnDone.setOnClickListener {
-        listener.onDoneButtonClicked(task)
-        dismiss()
+      btnDone.apply {
+        if (task.isDone) this.visibility = View.GONE
+        setOnClickListener {
+          listener.onDoneButtonClicked(task)
+          dismiss()
+        }
       }
     }
   }

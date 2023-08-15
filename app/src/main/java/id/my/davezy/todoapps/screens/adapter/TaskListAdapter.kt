@@ -35,6 +35,13 @@ class TaskListAdapter :
     onItemClickListener = listener
   }
 
+  fun notifyChanges(uId: Int?) {
+    currentList.firstOrNull { it.uId == uId }?.let {
+      val dataChanged = currentList.indexOf(it)
+      notifyItemChanged(dataChanged)
+    } ?: return
+  }
+
   inner class TaskListViewHolder(
     private val binding: ItemTaskListBinding
   ) : RecyclerView.ViewHolder(binding.root) {
