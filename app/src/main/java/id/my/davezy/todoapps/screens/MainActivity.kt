@@ -5,7 +5,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import dagger.hilt.android.AndroidEntryPoint
 import id.my.davezy.todoapps.databinding.ActivityMainBinding
-import id.my.davezy.todoapps.dialog.CreateTaskDialog
+import id.my.davezy.todoapps.dialogs.CreateTaskDialog
+import id.my.davezy.todoapps.dialogs.TaskOptionDialog
 import id.my.davezy.todoapps.domain.models.ChecklistModel
 import id.my.davezy.todoapps.domain.utils.DataState
 import id.my.davezy.todoapps.domain.utils.DataState.Loading.error
@@ -27,8 +28,10 @@ class MainActivity : AppCompatActivity() {
     binding = ActivityMainBinding.inflate(layoutInflater)
     setContentView(binding.root)
 
+    setupAdapter()
     setupSubscribers()
     setupButtonListener()
+    setupRefreshListener()
     viewModel.getTasksList()
     binding.rvTaskList.adapter = taskListAdapter
   }
@@ -46,11 +49,46 @@ class MainActivity : AppCompatActivity() {
         is DataState.Loading -> showLoading()
         is DataState.Error -> state.error { showErrorMessage(it.message) }
         is DataState.Success -> state.success {
-          viewModel.getTasksList()
           showSuccessMessage("Task Added")
+          viewModel.getTasksList()
         }
       }
     }
+    viewModel.deleteTaskState.collect(this) { state ->
+      when (state) {
+        is DataState.Loading -> showLoading()
+        is DataState.Error -> state.error { showErrorMessage(it.message) }
+        is DataState.Success -> state.success {
+          showSuccessMessage("Task removed")
+          viewModel.getTasksList()
+          taskListAdapter.notifyChanges(it)
+        }
+      }
+    }
+    viewModel.updateTaskState.collect(this) { state ->
+      when (state) {
+        is DataState.Loading -> showLoading()
+        is DataState.Error -> state.error { showErrorMessage(it.message) }
+        is DataState.Success -> state.success {
+          viewModel.getTasksList()
+          taskListAdapter.notifyChanges(it)
+          showSuccessMessage("Success")
+        }
+      }
+    }
+  }
+
+  private fun setupRefreshListener() {
+    binding.swipeRefresh.apply {
+      setOnRefreshListener {
+        viewModel.getTasksList()
+        isRefreshing = false
+      }
+    }
+  }
+
+  private fun setupAdapter() {
+    taskListAdapter.setOnClickListener { showTaskOptionDialog(it) }
   }
 
   private fun setupButtonListener() {
@@ -60,8 +98,22 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
-  private fun onCreateTaskDone() = CreateTaskDialog.OnDateTimeSetListener { taskName, dueDate ->
-    viewModel.createTask(taskName, dueDate.toStringFormatted())
+  private fun onCreateTaskDone() =
+    CreateTaskDialog.OnDateTimeSetListener { taskName, dueDate ->
+      viewModel.createTask(taskName, dueDate.toStringFormatted())
+    }
+
+  private fun showTaskOptionDialog(task: ChecklistModel) {
+    val dialog = TaskOptionDialog(task, object : TaskOptionDialog.TaskOptionDialogButtonListener {
+      override fun onDeleteButtonClicked(task: ChecklistModel) {
+        viewModel.deleteTask(task.uId)
+      }
+
+      override fun onDoneButtonClicked(task: ChecklistModel) {
+        viewModel.setChecklistDone(task.uId)
+      }
+    })
+    dialog.show(supportFragmentManager, TaskOptionDialog::class.simpleName)
   }
 
   private fun showSuccessView(data: List<ChecklistModel>?) {

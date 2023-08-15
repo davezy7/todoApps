@@ -1,5 +1,6 @@
 package id.my.davezy.todoapps.screens
 
+import android.provider.ContactsContract.Data
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,6 +27,12 @@ class MainViewModel @Inject constructor(
   val createTaskState =
     DataResource<DataState<Long?>>(DataState.Success(null))
 
+  val deleteTaskState =
+    DataResource<DataState<Int?>>(DataState.Success(null))
+
+  val updateTaskState =
+    DataResource<DataState<Int?>>(DataState.Success(null))
+
   fun getTasksList() {
     viewModelScope.launch(ioDispatcher) {
       useCase.fetchAllChecklists()
@@ -39,6 +46,22 @@ class MainViewModel @Inject constructor(
     viewModelScope.launch(ioDispatcher) {
       useCase.insertChecklist(task)
         .onEach { createTaskState.setValue(it) }
+        .launchIn(this)
+    }
+  }
+
+  fun deleteTask(uId: Int) {
+    viewModelScope.launch(ioDispatcher) {
+      useCase.deleteChecklist(uId)
+        .onEach { deleteTaskState.setValue(it) }
+        .launchIn(this)
+    }
+  }
+
+  fun setChecklistDone(uId: Int) {
+    viewModelScope.launch(ioDispatcher) {
+      useCase.updateChecklist(uId)
+        .onEach { updateTaskState.setValue(it) }
         .launchIn(this)
     }
   }

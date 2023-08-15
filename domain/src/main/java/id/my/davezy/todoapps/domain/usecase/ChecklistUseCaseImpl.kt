@@ -34,7 +34,7 @@ class ChecklistUseCaseImpl @Inject constructor(
     return sendFlow(dispatcher) { repository.deleteChecklist(uid) }
   }
 
-  override fun updateChecklist(data: ChecklistModel): Flow<DataState<Int>> {
-    return sendFlow(dispatcher) { repository.updateChecklist(data) }
+  override fun updateChecklist(uId: Int): Flow<DataState<Int>> {
+    return sendFlow(dispatcher) { repository.updateChecklist(uId) }
   }
 }

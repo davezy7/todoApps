@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
 import id.my.davezy.todoapps.data.entities.ChecklistEntity
 
 @Dao
@@ -25,6 +24,6 @@ interface ChecklistDao {
   @Query("DELETE FROM checklists WHERE uId = :uid")
   suspend fun deleteChecklist(uid: Int) : Int
 
-  @Update(entity = ChecklistEntity::class, onConflict = OnConflictStrategy.REPLACE)
-  suspend fun updateChecklist(data: ChecklistEntity) : Int
+  @Query("UPDATE checklists SET is_done = 1 WHERE uId = :uId")
+  suspend fun setChecklistDone(uId: Int) : Int
 }

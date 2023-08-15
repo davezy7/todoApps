@@ -68,11 +68,10 @@ class ChecklistRepositoryImpl @Inject constructor(
     }
   }
 
-  override suspend fun updateChecklist(data: ChecklistModel): Int {
+  override suspend fun updateChecklist(uId: Int): Int {
     return withContext(ioDispatcher) {
       try {
-        val newData = ChecklistEntity.fromModel(data)
-        return@withContext dao.updateChecklist(newData)
+        return@withContext dao.setChecklistDone(uId)
       } catch (t: Throwable) {
         throw t
       }

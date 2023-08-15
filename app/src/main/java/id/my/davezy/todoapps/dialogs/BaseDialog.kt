@@ -1,4 +1,4 @@
-package id.my.davezy.todoapps.dialog
+package id.my.davezy.todoapps.dialogs
 
 import android.app.Dialog
 import android.os.Bundle
